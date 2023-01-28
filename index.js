@@ -84,14 +84,19 @@ app.post("/login/", async (request, response) => {
         WHERE 
             username = '${username}'`;
   const dbUser = await db.get(selectUserQuery);
-  const isPassword = await bcrypt.compare(password, dbUser.password);
-  if (isPassword !== true) {
-    //send invalid user
+  if (username === undefined){
     response.status(400);
-    response.send("Invalid user password incorrect");
-  } else {
-    //response login success by comparing password
-
-    response.send("Login success");
+    response.send('Invalid User');
+  }else{
+    const isPassword = await bcrypt.compare(password, dbUser.password);
+    if (isPassword !== true) {
+      //send invalid user
+      response.status(400);
+      response.send("Invalid user password incorrect");
+    } else {
+      //response login success by comparing password
+      response.send("Login success");
+    }
   }
+  
 });
